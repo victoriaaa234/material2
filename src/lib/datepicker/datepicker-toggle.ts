@@ -61,7 +61,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
   }
-  private _disabled: boolean;
+  private _disabled: number;
 
   /** Custom icon set by the consumer. */
   @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
