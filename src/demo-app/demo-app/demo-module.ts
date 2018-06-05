@@ -25,7 +25,7 @@ import {CardDemo} from '../card/card-demo';
 import {CheckboxDemo, MatCheckboxDemoNestedChecklist} from '../checkbox/checkbox-demo';
 import {ChipsDemo} from '../chips/chips-demo';
 import {ConnectedOverlayDemo} from '../connected-overlay/connected-overlay-demo';
-import {CustomHeader, DatepickerDemo} from '../datepicker/datepicker-demo';
+import {Calendar, Datepicker, MonthView, DayView, YearView, DatepickerDemo} from '../datepicker/datepicker-demo';
 import {DemoMaterialModule} from '../demo-material-module';
 import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from '../dialog/dialog-demo';
 import {DrawerDemo} from '../drawer/drawer-demo';
@@ -91,14 +91,16 @@ import {DEMO_APP_ROUTES} from './routes';
     BottomSheetDemo,
     ButtonDemo,
     ButtonToggleDemo,
+      Calendar,
     CardDemo,
     CheckboxDemo,
     ChipsDemo,
     ConnectedOverlayDemo,
     ContentElementDialog,
     Counter,
-    CustomHeader,
+      Datepicker,
     DatepickerDemo,
+      DayView,
     DemoApp,
     DialogDemo,
     DrawerDemo,
@@ -117,6 +119,7 @@ import {DEMO_APP_ROUTES} from './routes';
     LiveAnnouncerDemo,
     MatCheckboxDemoNestedChecklist,
     MenuDemo,
+      MonthView,
     PaginatorDemo,
     PlatformDemo,
     PortalDemo,
@@ -139,13 +142,13 @@ import {DEMO_APP_ROUTES} from './routes';
     TooltipDemo,
     TypographyDemo,
     VirtualScrollDemo,
+      YearView,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
   ],
   entryComponents: [
     ContentElementDialog,
-    CustomHeader,
     DemoApp,
     ExampleBottomSheet,
     IFrameDialog,
