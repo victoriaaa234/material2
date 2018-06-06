@@ -44,19 +44,11 @@ export class Datepicker {
     @Input() minDate: Date | null;
     @Input() maxDate: Date | null;
     @ContentChild(CalendarView) view: CalendarView;
-
-    // constructor(public zone: NgZone) {}
-    //
-    // ngAfterContentInit() {
-    //     this.view.ngAfterContentInit();
-    // }
-
 }
 
 @Component({
   moduleId: module.id,
   selector: 'datepicker-demo',
-  // template: '<datepicker><month></month><year></year><day></day></datepicker>',
     template: `<datepicker><calendar [date]="date" [minDate]="minDate" [maxDate]="maxDate">
         <month></month><year></year><day></day></calendar></datepicker>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +56,7 @@ export class Datepicker {
 export class DatepickerDemo {
     date = new Date();
     minDate = new Date(2019, 3, 14);
-    maxDate = new Date(2020, 4, 13);
+    maxDate = new Date(2019, 4, 13);
 }
 
 @Component({
@@ -81,52 +73,42 @@ export class Calendar extends CalendarView implements AfterContentInit {
     @Input() date: Date;
     @Input() minDate: Date | null;
     @Input() maxDate: Date | null;
-  // date = new Date();
   @ContentChildren(CalendarView) views: QueryList<CalendarView>;
 
   constructor(public zone: NgZone, public cdr: ChangeDetectorRef) {
       super();
   }
 
-    ngAfterContentInit() {
-        // console.log(this.view);
-        this.zone.onStable.pipe(take(1)).subscribe(() => {
-            this.views.forEach(calendarInstance => {
-                if (this.minDate != null && this.minDate >= this.date) {
-                    calendarInstance.date = this.minDate;
-                    this.date = this.minDate;
-                    calendarInstance.minDate = this.minDate;
-                } else {
-                    calendarInstance.date = this.date;
-                }
+  ngAfterContentInit() {
+      this.zone.onStable.pipe(take(1)).subscribe(() => {
+          this.views.forEach(calendarInstance => {
+              if (this.minDate != null && this.minDate >= this.date) {
+                  calendarInstance.date = this.minDate;
+                  this.date = this.minDate;
+                  calendarInstance.minDate = this.minDate;
+              } else {
+                  calendarInstance.date = this.date;
+              }
 
-                if (this.maxDate != null && this.maxDate <= this.date) {
-                    calendarInstance.maxDate = this.maxDate;
-                    this.date = this.maxDate;
-                    calendarInstance.date = this.date;
-                } else if (this.maxDate != null) {
-                    calendarInstance.date = this.date;
-                    calendarInstance.maxDate = this.maxDate;
-                } else {
-                    calendarInstance.date = this.date;
-                }
-            });
-            this.cdr.markForCheck();
-        });
-        // this.view.date = this.date
-        this.views.forEach(calendarInstance => calendarInstance.dateChanges.subscribe((d) => {
-            // console.log(this.startAt);
-            // console.log(d);
-            this.date = d;
-            this.views.forEach(instance => instance.date = this.date);
-            this.cdr.markForCheck();
-            // calendarInstance.date = this.date;
-        }));
-        // view.dateChanges.subscribe((d) => {
-        //     this.date = d;
-        //     this.view.date = d;
-        // });
-    }
+              if (this.maxDate != null && this.maxDate <= this.date) {
+                  calendarInstance.maxDate = this.maxDate;
+                  this.date = this.maxDate;
+                  calendarInstance.date = this.date;
+              } else if (this.maxDate != null) {
+                  calendarInstance.date = this.date;
+                  calendarInstance.maxDate = this.maxDate;
+              } else {
+                  calendarInstance.date = this.date;
+              }
+          });
+          this.cdr.markForCheck();
+      });
+      this.views.forEach(calendarInstance => calendarInstance.dateChanges.subscribe((d) => {
+          this.date = d;
+          this.views.forEach(instance => instance.date = this.date);
+          this.cdr.markForCheck();
+      }));
+  }
 }
 
 @Component({
@@ -161,9 +143,9 @@ export class MonthView extends CalendarView {
               this.dateChanges.next(this.newDate);
           }
       }
-    }
+  }
 
-    prevDate() {
+  prevDate() {
       this.newDate = new Date(this.date.getFullYear(), this.date.getMonth() - 1,
           this.date.getDate(), this.date.getHours(), this.date.getMinutes(),
           this.date.getSeconds());
@@ -174,7 +156,7 @@ export class MonthView extends CalendarView {
               this.dateChanges.next(this.newDate);
           }
       }
-    }
+  }
 }
 
 @Component({
@@ -199,12 +181,16 @@ export class YearView extends CalendarView {
       this.newDate = new Date(this.date.getFullYear() + 1, this.date.getMonth(),
           this.date.getDate(), this.date.getHours(), this.date.getMinutes(),
           this.date.getSeconds());
-      if (this.minDate == null) {
+      if (this.minDate == null && this.maxDate == null) {
           this.dateChanges.next(this.newDate);
-      } else {
-            if (this.minDate.getTime() > this.newDate.getTime()) {} else {
-                this.dateChanges.next(this.newDate);
-            }
+      } else if (this.minDate == null && this.maxDate != null) {
+          if (this.maxDate.getTime() >= this.newDate.getTime()) {
+              this.dateChanges.next(this.newDate);
+          }
+      } else if (this.minDate != null && this.maxDate != null) {
+          if (this.maxDate.getTime() >= this.newDate.getTime()) {
+              this.dateChanges.next(this.newDate);
+          }
       }
   }
 
@@ -212,9 +198,7 @@ export class YearView extends CalendarView {
       this.newDate = new Date(this.date.getFullYear() - 1, this.date.getMonth(),
           this.date.getDate(), this.date.getHours(), this.date.getMinutes(),
           this.date.getSeconds());
-
       if (this.minDate == null) {
-          console.log('hello');
           this.dateChanges.next(this.newDate);
       } else {
           if (this.minDate.getTime() <= this.newDate.getTime()) {
@@ -222,7 +206,6 @@ export class YearView extends CalendarView {
           }
       }
   }
-
 }
 
 @Component({
@@ -248,12 +231,16 @@ export class DayView extends CalendarView {
       this.newDate = new Date(this.date.getFullYear(), this.date.getMonth(),
           this.date.getDate() + 1, this.date.getHours(), this.date.getMinutes(),
           this.date.getSeconds());
-      if (this.minDate == null) {
-        this.dateChanges.next(this.newDate);
-      } else {
-            if (this.minDate.getTime() > this.newDate.getTime()) {} else {
-                this.dateChanges.next(this.newDate);
-            }
+      if (this.minDate == null && this.maxDate == null) {
+          this.dateChanges.next(this.newDate);
+      } else if (this.minDate == null && this.maxDate != null) {
+          if (this.maxDate.getTime() >= this.newDate.getTime()) {
+              this.dateChanges.next(this.newDate);
+          }
+      } else if (this.minDate != null && this.maxDate != null) {
+          if (this.maxDate.getTime() >= this.newDate.getTime()) {
+              this.dateChanges.next(this.newDate);
+          }
       }
   }
 
