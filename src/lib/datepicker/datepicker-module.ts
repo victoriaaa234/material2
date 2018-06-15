@@ -16,9 +16,9 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatCalendar, MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
 import {
-  MatDatepicker,
-  MatDatepickerContent,
-  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    MatDatepicker,
+    MatDatepickerContent,
+    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
 } from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -26,50 +26,55 @@ import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle'
 import {MatMonthView} from './month-view';
 import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatCommonModule} from '@angular/material/core';
+import {CdkDatepickerModule} from '@angular/cdk/datepicker';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-    OverlayModule,
-    A11yModule,
-    PortalModule,
-  ],
-  exports: [
-    MatCalendar,
-    MatCalendarBody,
-    MatDatepicker,
-    MatDatepickerContent,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatDatepickerToggleIcon,
-    MatMonthView,
-    MatYearView,
-    MatMultiYearView,
-    MatCalendarHeader,
-  ],
-  declarations: [
-    MatCalendar,
-    MatCalendarBody,
-    MatDatepicker,
-    MatDatepickerContent,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatDatepickerToggleIcon,
-    MatMonthView,
-    MatYearView,
-    MatMultiYearView,
-    MatCalendarHeader,
-  ],
-  providers: [
-    MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-  ],
-  entryComponents: [
-    MatDatepickerContent,
-    MatCalendarHeader,
-  ]
+    imports: [
+        CdkDatepickerModule,
+        CommonModule,
+        MatButtonModule,
+        MatCommonModule,
+        MatDialogModule,
+        OverlayModule,
+        A11yModule,
+        PortalModule,
+    ],
+    exports: [
+        MatCalendar,
+        MatCalendarBody,
+        MatDatepicker,
+        MatDatepickerContent,
+        MatDatepickerInput,
+        MatDatepickerToggle,
+        MatDatepickerToggleIcon,
+        MatMonthView,
+        MatYearView,
+        MatMultiYearView,
+        MatCalendarHeader,
+    ],
+    declarations: [
+        MatCalendar,
+        MatCalendarBody,
+        MatDatepicker,
+        MatDatepickerContent,
+        MatDatepickerInput,
+        MatDatepickerToggle,
+        MatDatepickerToggleIcon,
+        MatMonthView,
+        MatYearView,
+        MatMultiYearView,
+        MatCalendarHeader,
+    ],
+    providers: [
+        MatDatepickerIntl,
+        MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    ],
+    entryComponents: [
+        MatDatepickerContent,
+        MatCalendarHeader,
+    ]
 })
-export class MatDatepickerModule {}
+export class MatDatepickerModule {
+}

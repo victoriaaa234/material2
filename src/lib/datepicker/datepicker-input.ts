@@ -36,6 +36,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
+import {CdkDatepickerInput} from '@angular/cdk/datepicker';
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -92,7 +93,7 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
+export class MatDatepickerInput<D> extends CdkDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
   /** The datepicker that this input is associated with. */
   @Input()
