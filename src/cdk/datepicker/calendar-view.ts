@@ -7,7 +7,6 @@
  */
 
 import {
-    ChangeDetectorRef,
     EventEmitter,
     Inject,
     Input,
@@ -15,7 +14,7 @@ import {
     Output,
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
-import {Subject, Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 
 /**
@@ -69,7 +68,7 @@ export abstract class CalendarView<D> {
     /**
      * Emits whenever there is a state change that the header may need to respond to.
      */
-    stateChanges = new Subject<void>();
+    stateChanges = new Subject<D>();
 
     constructor(
                 @Optional() private _dateAdapter: DateAdapter<D>,
