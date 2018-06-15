@@ -15,13 +15,12 @@ import {NgModule} from '@angular/core';
 //     CdkDatepicker,
 // } from './datepicker';
 // import {CdkDatepickerInput} from './datepicker-input';
-import {CalendarView} from './calendar-view';
 
 const EXPORTED_DECLARATIONS = [
     // CdkDatepicker,
     // CdkDatepickerInput,
-    CalendarView,
 ];
+
 @NgModule({
     imports: [
         CommonModule,
@@ -29,7 +28,8 @@ const EXPORTED_DECLARATIONS = [
         A11yModule,
         PortalModule,
     ],
-    exports: [EXPORTED_DECLARATIONS],
+    exports: EXPORTED_DECLARATIONS,
     declarations: EXPORTED_DECLARATIONS,
 })
-export class CdkDatepickerModule {}
+export class CdkDatepickerModule {
+}
