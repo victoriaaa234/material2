@@ -47,7 +47,6 @@ export abstract class CalendarView<D> {
 
 
     // Don't know about these...
-    private _intlChanges: Subscription;
 
     /** A function used to filter which dates are selectable. */
     @Input() dateFilter: (date: D) => boolean;
@@ -74,8 +73,7 @@ export abstract class CalendarView<D> {
 
     constructor(
                 @Optional() private _dateAdapter: DateAdapter<D>,
-                @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-                changeDetectorRef: ChangeDetectorRef) {
+                @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats) {
 
         if (!this._dateAdapter) {
             throw createMissingDateImplError('DateAdapter');
@@ -84,11 +82,6 @@ export abstract class CalendarView<D> {
         if (!this._dateFormats) {
             throw createMissingDateImplError('MAT_DATE_FORMATS');
         }
-
-        this._intlChanges = _intl.changes.subscribe(() => {
-            changeDetectorRef.markForCheck();
-            this.stateChanges.next();
-        });
     }
 
     /** Handles year selection in the multiyear view. */
