@@ -7,13 +7,6 @@
  */
 
 export * from './datepicker-module';
-// export * from './calendar';
-// export * from './calendar-body';
 // export * from './datepicker';
 // export * from './datepicker-input';
-export * from './datepicker-intl';
 export * from './calendar-view';
-// export * from './datepicker-toggle';
-// export * from './month';
-// export * from './year';
-// export * from './multi-year';

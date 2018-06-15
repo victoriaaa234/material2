@@ -11,31 +11,16 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-// import {MatCalendar, MatCalendarHeader} from './calendar';
-// import {MatCalendarBody} from './calendar-body';
 // import {
 //     CdkDatepicker,
-//     MatDatepickerContent,
 // } from './datepicker';
 // import {CdkDatepickerInput} from './datepicker-input';
-import {CdkDatepickerIntl} from './datepicker-intl';
-import {CalendarView} from '@angular/cdk/datepicker/calendar-view';
-// import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
-// import {CdkMonth} from './month';
-// import {CdkMultiYear} from './multi-year';
-// import {CdkYear} from './year';
+import {CalendarView} from './calendar-view';
 
 const EXPORTED_DECLARATIONS = [
-    // CdkCalendar,
     // CdkDatepicker,
     // CdkDatepickerInput,
-    CdkDatepickerIntl,
     CalendarView,
-    // CdkMonth,
-    // CdkYear,
-    // CdkMultiYear,
-
-    // MatDatepickerContent,
 ];
 @NgModule({
     imports: [

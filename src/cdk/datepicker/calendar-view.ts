@@ -17,7 +17,6 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
-import {CdkDatepickerIntl} from './datepicker-intl';
 
 /**
  * Possible views for the calendar.
@@ -68,15 +67,12 @@ export abstract class CalendarView<D> {
      */
     @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
-    /** Emits when any date is selected. */
-    @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
-
     /**
      * Emits whenever there is a state change that the header may need to respond to.
      */
     stateChanges = new Subject<void>();
 
-    constructor(_intl: CdkDatepickerIntl,
+    constructor(
                 @Optional() private _dateAdapter: DateAdapter<D>,
                 @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
                 changeDetectorRef: ChangeDetectorRef) {
@@ -103,9 +99,5 @@ export abstract class CalendarView<D> {
     /** Handles month selection in the year view. */
     _monthSelectedInYearView(normalizedMonth: D) {
         this.monthSelected.emit(normalizedMonth);
-    }
-
-    _userSelected(): void {
-        this._userSelection.emit();
     }
 }
