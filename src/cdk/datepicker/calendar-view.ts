@@ -29,7 +29,5 @@ export abstract class CalendarView<D> {
     /**
      * Emits whenever there is a state change that the header may need to respond to.
      */
-    changes = new Subject<D>();
-
-
+    readonly changes = new Subject<D>();
 }

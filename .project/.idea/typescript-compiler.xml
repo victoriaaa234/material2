@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="TypeScriptCompiler">
+    <option name="typeScriptServiceDirectory" value="/google/src/head/depot/google3/third_party/javascript/node_modules/typescript/stable/lib" />
+    <option name="versionType" value="SERVICE_DIRECTORY" />
+  </component>
+</project>
