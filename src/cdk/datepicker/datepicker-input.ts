@@ -1,4 +1,3 @@
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -22,7 +21,6 @@ import {
 } from '@angular/core';
 import {
     AbstractControl,
-    ControlValueAccessor,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ValidationErrors,
@@ -31,7 +29,6 @@ import {
     Validators
 } from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
-import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {CdkDatepicker} from './datepicker';
@@ -90,8 +87,7 @@ export class CdkDatepickerInputEvent<D> {
     },
     exportAs: 'cdkDatepickerInput',
 })
-export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
-    Validator {
+export class CdkDatepickerInput<D> implements AfterContentInit, OnDestroy, Validator {
     /** The datepicker that this input is associated with. */
     @Input()
     set cdkDatepicker(value: CdkDatepicker<D>) {
@@ -102,7 +98,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     private registerDatepicker(value: CdkDatepicker<D>) {
         if (value) {
             this._datepicker = value;
-            this._datepicker._registerInput(this);
+            this._datepicker._registerCdkInput(this);
         }
     }
 
@@ -208,8 +204,7 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     constructor(
         private _elementRef: ElementRef,
         @Optional() public _dateAdapter: DateAdapter<D>,
-        @Optional() @Inject(CDK_DATE_FORMATS) private _dateFormats: CdkDateFormats,
-        @Optional() private _formField: CdkFormField) {
+        @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats) {
         if (!this._dateAdapter) {
             throw createMissingDateImplError('DateAdapter');
         }

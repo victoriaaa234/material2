@@ -44,6 +44,7 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
+import {CdkDatepicker} from '@angular/cdk/datepicker';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -131,21 +132,21 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatDatepicker<D> implements OnDestroy, CanColor {
+export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, CanColor {
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
-  /** The date to open the calendar to initially. */
-  @Input()
-  get startAt(): D | null {
-    // If an explicit startAt is set we start there, otherwise we start at whatever the currently
-    // selected value is.
-    return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
-  }
-  set startAt(value: D | null) {
-    this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-  }
-  private _startAt: D | null;
+  // /** The date to open the calendar to initially. */
+  // @Input()
+  // get startAt(): D | null {
+  //   // If an explicit startAt is set we start there, otherwise we start at whatever the currently
+  //   // selected value is.
+  //   return this._startAt || (this._datepickerInput ? this._datepickerInput.value : null);
+  // }
+  // set startAt(value: D | null) {
+  //   this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  // }
+  // private _startAt: D | null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' = 'month';
@@ -219,20 +220,20 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The id for the datepicker calendar. */
   id: string = `mat-datepicker-${datepickerUid++}`;
 
-  /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
-
-  /** The minimum selectable date. */
-  get _minDate(): D | null {
-    return this._datepickerInput && this._datepickerInput.min;
-  }
-
-  /** The maximum selectable date. */
-  get _maxDate(): D | null {
-    return this._datepickerInput && this._datepickerInput.max;
-  }
+  // /** The currently selected date. */
+  // get _selected(): D | null { return this._validSelected; }
+  // set _selected(value: D | null) { this._validSelected = value; }
+  // private _validSelected: D | null = null;
+  //
+  // /** The minimum selectable date. */
+  // get _minDate(): D | null {
+  //   return this._datepickerInput && this._datepickerInput.min;
+  // }
+  //
+  // /** The maximum selectable date. */
+  // get _maxDate(): D | null {
+  //   return this._datepickerInput && this._datepickerInput.max;
+  // }
 
   get _dateFilter(): (date: D | null) => boolean {
     return this._datepickerInput && this._datepickerInput._dateFilter;
@@ -253,8 +254,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
 
-  /** Subscription to value changes in the associated input element. */
-  private _inputSubscription = Subscription.EMPTY;
+  // /** Subscription to value changes in the associated input element. */
+  // private _inputSubscription = Subscription.EMPTY;
 
   /** The input element this datepicker is associated with. */
   _datepickerInput: MatDatepickerInput<D>;
@@ -273,6 +274,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
+    super(_dateAdapter);
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
