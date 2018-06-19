@@ -11,14 +11,14 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-// import {
-//     CdkDatepicker,
-// } from './datepicker';
-// import {CdkDatepickerInput} from './datepicker-input';
+import {
+    CdkDatepicker,
+} from './datepicker';
+import {CdkDatepickerInput} from './datepicker-input';
 
 const EXPORTED_DECLARATIONS = [
-    // CdkDatepicker,
-    // CdkDatepickerInput,
+    CdkDatepicker,
+    CdkDatepickerInput,
 ];
 
 @NgModule({
@@ -31,5 +31,4 @@ const EXPORTED_DECLARATIONS = [
     exports: EXPORTED_DECLARATIONS,
     declarations: EXPORTED_DECLARATIONS,
 })
-export class CdkDatepickerModule {
-}
+export class CdkDatepickerModule {}

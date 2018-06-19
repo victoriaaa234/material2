@@ -6,22 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-    EventEmitter,
-    Inject,
-    Input,
-    Optional,
-    Output,
-} from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
-
-/**
- * Possible views for the calendar.
- * @docs-private
- */
-export type CdkCalendarView = 'month' | 'year' | 'multi-year';
 
 /**
  * A calendar that is used as part of the datepicker.
@@ -30,66 +15,19 @@ export type CdkCalendarView = 'month' | 'year' | 'multi-year';
 export abstract class CalendarView<D> {
 
     /** A date representing when to start the calendar. */
-    abstract set activeDate(value: D);
+    abstract activeDate: D;
 
     /** The minimum selectable date. */
-    abstract set minDate(value: D | null);
+    abstract minDate: D | null;
 
     /** The maximum selectable date. */
-    abstract set maxDate(value: D | null);
+    abstract maxDate: D | null;
 
     /** The currently selected date. */
-    abstract set selected(value: D | null);
-
-    @Input() _currentView: CdkCalendarView;
-
-
-
-    // Don't know about these...
-
-    /** A function used to filter which dates are selectable. */
-    @Input() dateFilter: (date: D) => boolean;
-
-    /** Emits when the currently selected date changes. */
-    @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
-
-    /**
-     * Emits the year chosen in multiyear view.
-     * This doesn't imply a change on the selected date.
-     */
-    @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
-
-    /**
-     * Emits the month chosen in year view.
-     * This doesn't imply a change on the selected date.
-     */
-    @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
+    abstract selected: D | null;
 
     /**
      * Emits whenever there is a state change that the header may need to respond to.
      */
-    stateChanges = new Subject<D>();
-
-    constructor(
-                @Optional() private _dateAdapter: DateAdapter<D>,
-                @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats) {
-
-        if (!this._dateAdapter) {
-            throw createMissingDateImplError('DateAdapter');
-        }
-
-        if (!this._dateFormats) {
-            throw createMissingDateImplError('MAT_DATE_FORMATS');
-        }
-    }
-
-    /** Handles year selection in the multiyear view. */
-    _yearSelectedInMultiYearView(normalizedYear: D) {
-        this.yearSelected.emit(normalizedYear);
-    }
-
-    /** Handles month selection in the year view. */
-    _monthSelectedInYearView(normalizedMonth: D) {
-        this.monthSelected.emit(normalizedMonth);
-    }
+    changes = new Subject<D>();
 }
