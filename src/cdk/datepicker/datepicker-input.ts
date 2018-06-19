@@ -15,9 +15,9 @@ import {
     EventEmitter,
     forwardRef,
     Inject,
+    Optional,
     Input,
     OnDestroy,
-    Optional,
     Output,
 } from '@angular/core';
 import {
@@ -77,7 +77,7 @@ export class CdkDatepickerInputEvent<D> {
     providers: [
         CDK_DATEPICKER_VALUE_ACCESSOR,
         CDK_DATEPICKER_VALIDATORS,
-        {provide: CDK_INPUT_VALUE_ACCESSOR, useExisting: CdkDatepickerInput},
+        {useExisting: CdkDatepickerInput},
     ],
     host: {
         '[attr.aria-haspopup]': 'true',
@@ -87,8 +87,6 @@ export class CdkDatepickerInputEvent<D> {
         '[disabled]': 'disabled',
         '(input)': '_onInput($event.target.value)',
         '(change)': '_onChange()',
-        '(blur)': '_onBlur()',
-        '(keydown)': '_onKeydown($event)',
     },
     exportAs: 'cdkDatepickerInput',
 })
@@ -107,14 +105,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
             this._datepicker._registerInput(this);
         }
     }
-
-    /** Function that can be used to filter out dates within the datepicker. */
-    @Input()
-    set cdkDatepickerFilter(value: (date: D | null) => boolean) {
-        this._dateFilter = value;
-        this._validatorOnChange();
-    }
-    _dateFilter: (date: D | null) => boolean;
 
     /** The value of the input. */
     @Input()
@@ -156,20 +146,12 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     get disabled(): boolean { return !!this._disabled; }
     set disabled(value: boolean) {
         const newValue = coerceBooleanProperty(value);
-        const element = this._elementRef.nativeElement;
 
         if (this._disabled !== newValue) {
             this._disabled = newValue;
             this._disabledChange.emit(newValue);
         }
 
-        // We need to null check the `blur` method, because it's undefined during SSR.
-        if (newValue && element.blur) {
-            // Normally, native input elements automatically blur if they turn disabled. This behavior
-            // is problematic, because it would mean that it triggers another change detection cycle,
-            // which then causes a changed after checked error if the input element was focused before.
-            element.blur();
-        }
     }
     private _disabled: boolean;
 
@@ -186,10 +168,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
     /** Emits when the disabled state has changed */
     _disabledChange = new EventEmitter<boolean>();
-
-    _onTouched = () => {};
-
-    private _cvaOnChange: (value: any) => void = () => {};
 
     private _validatorOnChange = () => {};
 
@@ -217,13 +195,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
         return (!this.max || !controlValue ||
             this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
             null : {'cdkDatepickerMax': {'max': this.max, 'actual': controlValue}};
-    }
-
-    /** The form control validator for the date filter. */
-    private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-        return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
-            null : {'cdkDatepickerFilter': true};
     }
 
     /** The combined form control validator for this input. */
@@ -256,8 +227,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
         if (this._datepicker) {
             this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
                 this.value = selected;
-                this._cvaOnChange(selected);
-                this._onTouched();
                 this.dateInput.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
                 this.dateChange.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
             });
@@ -287,16 +256,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     }
 
     // Implemented as part of ControlValueAccessor.
-    registerOnChange(fn: (value: any) => void): void {
-        this._cvaOnChange = fn;
-    }
-
-    // Implemented as part of ControlValueAccessor.
-    registerOnTouched(fn: () => void): void {
-        this._onTouched = fn;
-    }
-
-    // Implemented as part of ControlValueAccessor.
     setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
@@ -308,7 +267,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
         if (!this._dateAdapter.sameDate(date, this._value)) {
             this._value = date;
-            this._cvaOnChange(date);
             this._valueChange.emit(date);
             this.dateInput.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
         }
@@ -316,16 +274,6 @@ export class CdkDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
     _onChange() {
         this.dateChange.emit(new CdkDatepickerInputEvent(this, this._elementRef.nativeElement));
-    }
-
-    /** Handles blur events on the input. */
-    _onBlur() {
-        // Reformat the input only if we have a valid value.
-        if (this.value) {
-            this._formatValue(this.value);
-        }
-
-        this._onTouched();
     }
 
     /** Formats a value and sets it on the input element. */

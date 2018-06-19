@@ -7,6 +7,6 @@ ng_module(
   name = "datepicker",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/datepicker",
-  deps = [],
+  deps = ["@rxjs"],
   tsconfig = "//src/cdk:tsconfig-build.json",
 )

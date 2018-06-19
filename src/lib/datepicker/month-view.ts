@@ -34,6 +34,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/c
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {CalendarView} from '@angular/cdk/datepicker';
 
 
 const DAYS_PER_WEEK = 7;
@@ -51,7 +52,7 @@ const DAYS_PER_WEEK = 7;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatMonthView<D> implements AfterContentInit {
+export class MatMonthView<D> extends CalendarView<D> implements AfterContentInit {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -133,6 +134,7 @@ export class MatMonthView<D> implements AfterContentInit {
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
+    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }

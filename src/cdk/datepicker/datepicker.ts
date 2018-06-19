@@ -6,28 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE, UP_ARROW} from '@angular/cdk/keycodes';
-import {
-    Overlay,
-    OverlayConfig,
-    OverlayRef,
-    PositionStrategy,
-    ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
-import {take, filter} from 'rxjs/operators';
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    ComponentRef,
-    ElementRef,
     EventEmitter,
     Inject,
-    InjectionToken,
     Input,
     NgZone,
     Optional,
@@ -37,68 +21,14 @@ import {
     ViewEncapsulation,
     OnDestroy,
 } from '@angular/core';
-import {merge, Subject, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {CdkDatepickerInput} from './datepicker-input';
-import {CdkCalendar} from './calendar';
 import {DateAdapter} from '../../lib/core/datetime';
 import {CalendarView} from '@angular/cdk/datepicker/calendar-view';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
-
-/** Injection token that determines the scroll handling while the calendar is open. */
-export const MAT_DATEPICKER_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy');
-
-/** @docs-private */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-    return () => overlay.scrollStrategies.reposition();
-}
-
-/** @docs-private */
-export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
-    provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-    deps: [Overlay],
-    useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
-};
-
-// Boilerplate for applying mixins to MatDatepickerContent.
-/** @docs-private */
-export class MatDatepickerContentBase {
-    constructor(public _elementRef: ElementRef) { }
-}
-
-/**
- * Component used as the content for the datepicker dialog and popup. We use this instead of using
- * MatCalendar directly as the content so we can control the initial focus. This also gives us a
- * place to put additional features of the popup that are not part of the calendar itself in the
- * future. (e.g. confirmation buttons).
- * @docs-private
- */
-@Component({
-    moduleId: module.id,
-    selector: 'mat-datepicker-content',
-    templateUrl: 'datepicker-content.html',
-    styleUrls: ['datepicker-content.css'],
-    host: {
-        'class': 'mat-datepicker-content',
-        '[@transformPanel]': '"enter"',
-        '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
-    },
-    exportAs: 'matDatepickerContent',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class CdkDatepickerContent<D> {
-
-    /** Reference to the internal calendar component. */
-    @ViewChild(CalendarView) _calendar: CalendarView<D>;
-
-    /** Reference to the datepicker that created the overlay. */
-    datepicker: CdkDatepicker<D>;
-}
-
 
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="cdkDatepicker"). We can change this to a directive
@@ -125,26 +55,8 @@ export class CdkDatepicker<D> implements OnDestroy {
     }
     private _startAt: D | null;
 
-    /** The view that the calendar should start in. */
-    @Input() startView: 'month' | 'year' = 'month';
-
-    /**
-     * Emits selected year in multiyear view.
-     * This doesn't imply a change on the selected date.
-     */
-    @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
-
-    /**
-     * Emits selected month in year view.
-     * This doesn't imply a change on the selected date.
-     */
-    @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
-
-    /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-    @Input() panelClass: string | string[];
-
     /** The id for the datepicker calendar. */
-    id: string = `mat-datepicker-${datepickerUid++}`;
+    id: string = `cdk-datepicker-${datepickerUid++}`;
 
     /** The currently selected date. */
     get _selected(): D | null { return this._validSelected; }
@@ -161,37 +73,29 @@ export class CdkDatepicker<D> implements OnDestroy {
         return this._datepickerInput && this._datepickerInput.max;
     }
 
-    get _dateFilter(): (date: D | null) => boolean {
-        return this._datepickerInput && this._datepickerInput._dateFilter;
-    }
-
     /** Subscription to value changes in the associated input element. */
     private _inputSubscription = Subscription.EMPTY;
 
     /** The input element this datepicker is associated with. */
     _datepickerInput: CdkDatepickerInput<D>;
 
-    /** Emits when the datepicker is disabled. */
-    readonly _disabledChange = new Subject<boolean>();
-
     /** Emits new selected date when selected date changes. */
     readonly _selectedChanged = new Subject<D>();
 
-    constructor(private _overlay: Overlay,
-                private _ngZone: NgZone,
+    constructor(private _ngZone: NgZone,
                 private _viewContainerRef: ViewContainerRef,
-                @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
                 @Optional() private _dateAdapter: DateAdapter<D>,
-                @Optional() private _dir: Directionality,
                 @Optional() @Inject(DOCUMENT) private _document: any) {
         if (!this._dateAdapter) {
             throw createMissingDateImplError('DateAdapter');
         }
     }
 
+
+    @ViewChild(CalendarView) _calendar: CalendarView<D>;
+
     ngOnDestroy() {
         this._inputSubscription.unsubscribe();
-        this._disabledChange.complete();
     }
 
     /** Selects the given date */
@@ -203,23 +107,13 @@ export class CdkDatepicker<D> implements OnDestroy {
         }
     }
 
-    /** Emits the selected year in multiyear view */
-    _selectYear(normalizedYear: D): void {
-        this.yearSelected.emit(normalizedYear);
-    }
-
-    /** Emits selected month in year view */
-    _selectMonth(normalizedMonth: D): void {
-        this.monthSelected.emit(normalizedMonth);
-    }
-
     /**
      * Register an input with this datepicker.
      * @param input The datepicker input to register with this datepicker.
      */
     _registerInput(input: CdkDatepickerInput<D>): void {
         if (this._datepickerInput) {
-            throw Error('A MatDatepicker can only be associated with a single input.');
+            throw Error('A CdkDatepicker can only be associated with a single input.');
         }
         this._datepickerInput = input;
         this._inputSubscription =
