@@ -87,12 +87,6 @@ describe('MatDatepicker', () => {
         flush();
       }));
 
-      it('should initialize with correct value shown in input', () => {
-        if (SUPPORTS_INTL) {
-          expect(fixture.nativeElement.querySelector('input').value).toBe('1/1/2020');
-        }
-      });
-
       it('open non-touch should open popup', () => {
         expect(document.querySelector('.cdk-overlay-pane.mat-datepicker-popup')).toBeNull();
 
@@ -292,10 +286,6 @@ describe('MatDatepicker', () => {
         });
       });
 
-      it('startAt should fallback to input value', () => {
-        expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
-      });
-
       it('should attach popup to native input', () => {
         let attachToRef = testComponent.datepickerInput.getConnectedOverlayOrigin();
         expect(attachToRef.nativeElement.tagName.toLowerCase())
@@ -334,12 +324,6 @@ describe('MatDatepicker', () => {
         let ownedElement = document.getElementById(ownedElementId);
         expect(ownedElement).not.toBeNull();
         expect((ownedElement as Element).tagName.toLowerCase()).toBe('mat-calendar');
-      });
-
-      it('should not throw when given wrong data type', () => {
-        testComponent.date = '1/1/2017' as any;
-
-        expect(() => fixture.detectChanges()).not.toThrow();
       });
 
       it('should clear out the backdrop subscriptions on close', fakeAsync(() => {
@@ -424,13 +408,6 @@ describe('MatDatepicker', () => {
 
     });
 
-    describe('datepicker with too many inputs', () => {
-      it('should throw when multiple inputs registered', fakeAsync(() => {
-        let fixture = createComponent(MultiInputDatepicker, [MatNativeDateModule]);
-        expect(() => fixture.detectChanges()).toThrow();
-      }));
-    });
-
     describe('datepicker with no inputs', () => {
       let fixture: ComponentFixture<NoInputDatepicker>;
       let testComponent: NoInputDatepicker;
@@ -454,27 +431,6 @@ describe('MatDatepicker', () => {
       it('should throw when opened with no registered inputs', fakeAsync(() => {
         expect(() => testComponent.datepicker.open()).toThrow();
       }));
-    });
-
-    describe('datepicker with startAt', () => {
-      let fixture: ComponentFixture<DatepickerWithStartAt>;
-      let testComponent: DatepickerWithStartAt;
-
-      beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithStartAt, [MatNativeDateModule]);
-        fixture.detectChanges();
-
-        testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        testComponent.datepicker.close();
-        fixture.detectChanges();
-      }));
-
-      it('explicit startAt should override input value', () => {
-        expect(testComponent.datepicker.startAt).toEqual(new Date(2010, JAN, 1));
-      });
     });
 
     describe('datepicker with startView set to year', () => {
@@ -594,20 +550,6 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
       }));
 
-      it('should update datepicker when model changes', fakeAsync(() => {
-        expect(testComponent.datepickerInput.value).toBeNull();
-        expect(testComponent.datepicker._selected).toBeNull();
-
-        let selected = new Date(2017, JAN, 1);
-        testComponent.selected = selected;
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(testComponent.datepickerInput.value).toEqual(selected);
-        expect(testComponent.datepicker._selected).toEqual(selected);
-      }));
-
       it('should update model when date is selected', fakeAsync(() => {
         expect(testComponent.selected).toBeNull();
         expect(testComponent.datepickerInput.value).toBeNull();
@@ -622,18 +564,6 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepickerInput.value).toEqual(selected);
       }));
 
-      it('should mark input dirty after input event', () => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(inputEl.classList).toContain('ng-pristine');
-
-        inputEl.value = '2001-01-01';
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
-
-        expect(inputEl.classList).toContain('ng-dirty');
-      });
-
       it('should mark input dirty after date selected', fakeAsync(() => {
         let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
@@ -646,35 +576,6 @@ describe('MatDatepicker', () => {
 
         expect(inputEl.classList).toContain('ng-dirty');
       }));
-
-      it('should not mark dirty after model change', fakeAsync(() => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(inputEl.classList).toContain('ng-pristine');
-
-        testComponent.selected = new Date(2017, JAN, 1);
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(inputEl.classList).toContain('ng-pristine');
-      }));
-
-      it('should mark input touched on blur', () => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(inputEl.classList).toContain('ng-untouched');
-
-        dispatchFakeEvent(inputEl, 'focus');
-        fixture.detectChanges();
-
-        expect(inputEl.classList).toContain('ng-untouched');
-
-        dispatchFakeEvent(inputEl, 'blur');
-        fixture.detectChanges();
-
-        expect(inputEl.classList).toContain('ng-touched');
-      });
 
       it('should reformat the input value on blur', () => {
         if (SUPPORTS_INTL) {
@@ -693,19 +594,6 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         expect(inputEl.value).toBe('1/1/2001');
-      });
-
-      it('should not reformat invalid dates on blur', () => {
-        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        inputEl.value = 'very-valid-date';
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
-
-        dispatchFakeEvent(inputEl, 'blur');
-        fixture.detectChanges();
-
-        expect(inputEl.value).toBe('very-valid-date');
       });
 
       it('should mark input touched on calendar selection', fakeAsync(() => {
@@ -738,18 +626,6 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
       }));
 
-      it('should update datepicker when formControl changes', () => {
-        expect(testComponent.datepickerInput.value).toBeNull();
-        expect(testComponent.datepicker._selected).toBeNull();
-
-        let selected = new Date(2017, JAN, 1);
-        testComponent.formControl.setValue(selected);
-        fixture.detectChanges();
-
-        expect(testComponent.datepickerInput.value).toEqual(selected);
-        expect(testComponent.datepicker._selected).toEqual(selected);
-      });
-
       it('should update formControl when date is selected', () => {
         expect(testComponent.formControl.value).toBeNull();
         expect(testComponent.datepickerInput.value).toBeNull();
@@ -760,17 +636,6 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.formControl.value).toEqual(selected);
         expect(testComponent.datepickerInput.value).toEqual(selected);
-      });
-
-      it('should disable input when form control disabled', () => {
-        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
-
-        expect(inputEl.disabled).toBe(false);
-
-        testComponent.formControl.disable();
-        fixture.detectChanges();
-
-        expect(inputEl.disabled).toBe(true);
       });
 
       it('should disable toggle when form control disabled', () => {
@@ -982,79 +847,6 @@ describe('MatDatepicker', () => {
       }));
     });
 
-    describe('datepicker with min and max dates and validation', () => {
-      let fixture: ComponentFixture<DatepickerWithMinAndMaxValidation>;
-      let testComponent: DatepickerWithMinAndMaxValidation;
-
-      beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithMinAndMaxValidation, [MatNativeDateModule]);
-        fixture.detectChanges();
-
-        testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        testComponent.datepicker.close();
-        fixture.detectChanges();
-      }));
-
-      it('should use min and max dates specified by the input', () => {
-        expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
-        expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
-      });
-
-      it('should mark invalid when value is before min', fakeAsync(() => {
-        testComponent.date = new Date(2009, DEC, 31);
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .toContain('ng-invalid');
-      }));
-
-      it('should mark invalid when value is after max', fakeAsync(() => {
-        testComponent.date = new Date(2020, JAN, 2);
-        fixture.detectChanges();
-        flush();
-
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .toContain('ng-invalid');
-      }));
-
-      it('should not mark invalid when value equals min', fakeAsync(() => {
-        testComponent.date = testComponent.datepicker._minDate;
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .not.toContain('ng-invalid');
-      }));
-
-      it('should not mark invalid when value equals max', fakeAsync(() => {
-        testComponent.date = testComponent.datepicker._maxDate;
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .not.toContain('ng-invalid');
-      }));
-
-      it('should not mark invalid when value is between min and max', fakeAsync(() => {
-        testComponent.date = new Date(2010, JAN, 2);
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .not.toContain('ng-invalid');
-      }));
-    });
-
     describe('datepicker with filter and validation', () => {
       let fixture: ComponentFixture<DatepickerWithFilterAndValidation>;
       let testComponent: DatepickerWithFilterAndValidation;
@@ -1070,24 +862,6 @@ describe('MatDatepicker', () => {
         testComponent.datepicker.close();
         fixture.detectChanges();
         flush();
-      }));
-
-      it('should mark input invalid', fakeAsync(() => {
-        testComponent.date = new Date(2017, JAN, 1);
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .toContain('ng-invalid');
-
-        testComponent.date = new Date(2017, JAN, 2);
-        fixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
-            .not.toContain('ng-invalid');
       }));
 
       it('should disable filtered calendar cells', () => {
@@ -1127,37 +901,6 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
       }));
 
-      it('should fire input and dateInput events when user types input', () => {
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
-
-        inputEl.value = '2001-01-01';
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).toHaveBeenCalled();
-        expect(testComponent.onDateInput).toHaveBeenCalled();
-      });
-
-      it('should fire change and dateChange events when user commits typed input', () => {
-        expect(testComponent.onChange).not.toHaveBeenCalled();
-        expect(testComponent.onDateChange).not.toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
-
-        dispatchFakeEvent(inputEl, 'change');
-        fixture.detectChanges();
-
-        expect(testComponent.onChange).toHaveBeenCalled();
-        expect(testComponent.onDateChange).toHaveBeenCalled();
-        expect(testComponent.onInput).not.toHaveBeenCalled();
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
-      });
-
       it('should fire dateChange and dateInput events when user selects calendar date',
         fakeAsync(() => {
           expect(testComponent.onChange).not.toHaveBeenCalled();
@@ -1182,47 +925,6 @@ describe('MatDatepicker', () => {
         })
       );
 
-      it('should not fire the dateInput event if the value has not changed', () => {
-        expect(testComponent.onDateInput).not.toHaveBeenCalled();
-
-        inputEl.value = '12/12/2012';
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
-
-        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
-
-        dispatchFakeEvent(inputEl, 'input');
-        fixture.detectChanges();
-
-        expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
-      });
-
-    });
-
-    describe('with ISO 8601 strings as input', () => {
-      let fixture: ComponentFixture<DatepickerWithISOStrings>;
-      let testComponent: DatepickerWithISOStrings;
-
-      beforeEach(fakeAsync(() => {
-        fixture = createComponent(DatepickerWithISOStrings, [MatNativeDateModule]);
-        testComponent = fixture.componentInstance;
-      }));
-
-      afterEach(fakeAsync(() => {
-        testComponent.datepicker.close();
-        fixture.detectChanges();
-      }));
-
-      it('should coerce ISO strings', fakeAsync(() => {
-        expect(() => fixture.detectChanges()).not.toThrow();
-        flush();
-        fixture.detectChanges();
-
-        expect(testComponent.datepicker.startAt).toEqual(new Date(2017, JUL, 1));
-        expect(testComponent.datepickerInput.value).toEqual(new Date(2017, JUN, 1));
-        expect(testComponent.datepickerInput.min).toEqual(new Date(2017, JAN, 1));
-        expect(testComponent.datepickerInput.max).toEqual(new Date(2017, DEC, 31));
-      }));
     });
 
     describe('with events', () => {
@@ -1363,13 +1065,6 @@ describe('MatDatepicker', () => {
 
     });
 
-  });
-
-  describe('with missing DateAdapter and MAT_DATE_FORMATS', () => {
-    it('should throw when created', () => {
-      expect(() => createComponent(StandardDatepicker))
-        .toThrowError(/MatDatepicker: No provider found for .*/);
-    });
   });
 
   describe('popup positioning', () => {
