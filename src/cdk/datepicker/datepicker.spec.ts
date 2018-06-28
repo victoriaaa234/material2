@@ -9,7 +9,7 @@ import {
   JAN,
   JUL,
   JUN,
-  MAT_DATE_LOCALE,
+  CDK_DATE_LOCALE,
   NativeDateModule,
   SEP,
 } from '@angular/material/core';

@@ -1219,30 +1219,9 @@ class StandardDatepicker {
 
 
 @Component({
-  template: `
-    <input [matDatepicker]="d"><input [matDatepicker]="d"><mat-datepicker #d></mat-datepicker>
-  `,
-})
-class MultiInputDatepicker {}
-
-
-@Component({
   template: `<mat-datepicker #d></mat-datepicker>`,
 })
 class NoInputDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-}
-
-
-@Component({
-  template: `
-    <input [matDatepicker]="d" [value]="date">
-    <mat-datepicker #d [startAt]="startDate"></mat-datepicker>
-  `,
-})
-class DatepickerWithStartAt {
-  date = new Date(2020, JAN, 1);
-  startDate = new Date(2010, JAN, 1);
   @ViewChild('d') datepicker: MatDatepicker<Date>;
 }
 
@@ -1347,21 +1326,6 @@ class FormFieldDatepicker {
 
 @Component({
   template: `
-    <input [matDatepicker]="d" [(ngModel)]="date" [min]="minDate" [max]="maxDate">
-    <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
-    <mat-datepicker #d></mat-datepicker>
-  `,
-})
-class DatepickerWithMinAndMaxValidation {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  date: Date | null;
-  minDate = new Date(2010, JAN, 1);
-  maxDate = new Date(2020, JAN, 1);
-}
-
-
-@Component({
-  template: `
     <input [matDatepicker]="d" [(ngModel)]="date" [matDatepickerFilter]="filter">
     <mat-datepicker-toggle [for]="d"></mat-datepicker-toggle>
     <mat-datepicker #d [touchUi]="true"></mat-datepicker>
@@ -1402,22 +1366,6 @@ class DatepickerWithChangeAndInputEvents {
 })
 class DatepickerWithi18n {
   date: Date | null = new Date(2010, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-}
-
-
-@Component({
-  template: `
-    <input [matDatepicker]="d" [(ngModel)]="value" [min]="min" [max]="max">
-    <mat-datepicker #d [startAt]="startAt"></mat-datepicker>
-  `
-})
-class DatepickerWithISOStrings {
-  value = new Date(2017, JUN, 1).toISOString();
-  min = new Date(2017, JAN, 1).toISOString();
-  max = new Date (2017, DEC, 31).toISOString();
-  startAt = new Date(2017, JUL, 1).toISOString();
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }
