@@ -23,6 +23,7 @@ ts_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     ":datepicker",
+    "//src/cdk/testing",
     "@rxjs",
   ],
   tsconfig = "//src/cdk:tsconfig-build.json",
