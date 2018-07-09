@@ -8,6 +8,6 @@ import {FormControl} from '@angular/forms';
     styleUrls: ['cdk-datepicker-value-example.css'],
 })
 export class CdkDatepickerValueExample {
-    date = new FormControl(new Date());
-    serializedDate = new FormControl((new Date()).toISOString());
+  date = new FormControl(new Date());
+  serializedDate = new FormControl((new Date()).toISOString());
 }

@@ -8,9 +8,9 @@ import {CdkDatepickerInputEvent} from '@angular/cdk/datepicker';
     styleUrls: ['cdk-datepicker-events-example.css'],
 })
 export class CdkDatepickerEventsExample {
-    events: string[] = [];
+  events: string[] = [];
 
-    addEvent(type: string, event: CdkDatepickerInputEvent<Date>) {
-        this.events.push(`${type}: ${event.value}`);
-    }
+  addEvent(type: string, event: CdkDatepickerInputEvent<Date>) {
+    this.events.push(`${type}: ${event.value}`);
+  }
 }
