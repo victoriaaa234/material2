@@ -4,15 +4,8 @@ import {
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {
-  DEC,
-  JAN,
-  JUL,
-  JUN,
-  CDK_DATE_LOCALE,
-  NativeDateModule,
-  SEP,
-} from '@angular/material/core';
+import {DEC, JAN, JUL, JUN, SEP} from '@angular/cdk/testing';
+import {CDK_DATE_LOCALE, NativeDateModule} from '@angular/cdk/datetime';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkDatepicker} from './datepicker';
