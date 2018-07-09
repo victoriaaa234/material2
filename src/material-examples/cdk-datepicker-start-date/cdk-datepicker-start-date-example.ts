@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CalendarView} from '@angular/cdk/datepicker';
 
 /** @title CDK Datepicker start date */
 @Component({
@@ -9,3 +10,5 @@ import {Component} from '@angular/core';
 export class CdkDatepickerStartViewExample {
     startDate = new Date(1990, 0, 1);
 }
+
+// Implement CalendarView component example

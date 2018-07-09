@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {CdkDatepickerInputEvent} from '@angular/cdk/datepicker';
 
-/** @title Datepicker input and change events */
+/** @title CDK Datepicker input and change events */
 @Component({
     selector: 'cdk-datepicker-events-example',
     templateUrl: 'cdk-datepicker-events-example.html',

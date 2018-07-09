@@ -1,3 +1,2 @@
-<cdk-datepicker>
-  <calendar [min]="minDate" [max]="maxDate" placeholder="Choose a date"></calendar>
-</cdk-datepicker>
+<input [cdkDatepicker]="picker" [min]="minDate" [max]="maxDate" placeholder="Choose a minimum or maximum date" >
+<cdk-datepicker #picker><calendar></calendar></cdk-datepicker>
