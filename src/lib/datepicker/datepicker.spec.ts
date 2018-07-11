@@ -996,7 +996,7 @@ describe('MatDatepicker', () => {
       }));
 
       it('should use min and max dates specified by the input', () => {
-        expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
+        expect(testComponent.datepicker.minDate).toEqual(new Date(2010, JAN, 1));
         expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
       });
 
@@ -1022,7 +1022,7 @@ describe('MatDatepicker', () => {
       }));
 
       it('should not mark invalid when value equals min', fakeAsync(() => {
-        testComponent.date = testComponent.datepicker._minDate;
+        testComponent.date = testComponent.datepicker.minDate;
         fixture.detectChanges();
         flush();
         fixture.detectChanges();

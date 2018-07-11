@@ -43,6 +43,7 @@ import {merge, Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendar} from './calendar';
+import {CdkDatepicker} from './cdk-datepicker';
 import {matDatepickerAnimations} from './datepicker-animations';
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -131,7 +132,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatDatepicker<D> implements OnDestroy, CanColor {
+export class MatDatepicker<D> extends CdkDatepicker<D> implements OnDestroy, CanColor {
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
@@ -225,7 +226,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _validSelected: D | null = null;
 
   /** The minimum selectable date. */
-  get _minDate(): D | null {
+  get minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
   }
 
@@ -235,7 +236,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   get _dateFilter(): (date: D | null) => boolean {
-    return this._datepickerInput && this._datepickerInput._dateFilter;
+    return this._datepickerInput && this._datepickerInput.dateFilter;
   }
 
   /** A reference to the overlay when the calendar is opened as a popup. */
@@ -273,6 +274,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
+    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -318,7 +320,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
     this._datepickerInput = input;
     this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+        this._datepickerInput.valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */

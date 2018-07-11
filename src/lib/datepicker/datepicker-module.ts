@@ -20,6 +20,7 @@ import {
   MatDatepickerContent,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
 } from './datepicker';
+import {CdkDatepickerInput} from './cdk-datepicker-input';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
@@ -42,6 +43,8 @@ import {MatYearView} from './year-view';
     MatCalendarBody,
     MatDatepicker,
     MatDatepickerContent,
+      // CdkDatepicker,
+      CdkDatepickerInput,
     MatDatepickerInput,
     MatDatepickerToggle,
     MatDatepickerToggleIcon,
@@ -54,6 +57,8 @@ import {MatYearView} from './year-view';
     MatCalendar,
     MatCalendarBody,
     MatDatepicker,
+      // CdkDatepicker,
+      CdkDatepickerInput,
     MatDatepickerContent,
     MatDatepickerInput,
     MatDatepickerToggle,
