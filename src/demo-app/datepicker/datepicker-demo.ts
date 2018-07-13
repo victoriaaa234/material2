@@ -7,10 +7,10 @@
  */
 
 /**
- * Prototype for the Datepicker CDK with example of Material Calendar that will implement the CDK.
- * For this prototype, I will be using the Angular Date component and then incorporating DateAdapter
- * as the new Date component after prototyping completion. The main functionality for the Datepicker
- * will exist in the CDK and the UI components will exist in the Material Calendar.
+ * Prototype for the Timepicker CDK with example of Material Time that will implement the CDK.
+ * For this prototype, I will be using the Angular Date/Time component and then incorporating DateAdapter
+ * as the new Date/Time component after prototyping completion. The main functionality for the Timepicker
+ * will exist in the CDK and the UI components will exist in the Material Time.
  */
 
 import {
@@ -26,85 +26,86 @@ import {take} from 'rxjs/operators';
 
 
 /**
- * CalendarView Component that will be part of the Datepicker CDK. This will be an abstract class
+ * TimeView Component that will be part of the Timepicker CDK. This will be an abstract class
  * with three variables to be set (two of them are optional). These variables are the focus date,
  * the minimum date, and the maximum date. The default value for the focus date is today's date, and
  * setting the minimum and maximum date are optional. I will have a change detector that will detect
- * any changes made in any of the views that extend CalendarView.
+ * any changes made in any of the views that extend TimeView.
  */
 @Injectable()
-abstract class CalendarView {
-    abstract set date(value: Date);
-    abstract set minDate(value: Date | null);
-    abstract set maxDate(value: Date | null);
-    readonly dateChanges = new Subject<Date>();
+abstract class TimeView {
+    abstract set time(value: Date);
+    abstract set minTime(value: Date | null);
+    abstract set maxTime(value: Date | null);
+    readonly timeChanges = new Subject<Date>();
 }
 
 /**
- * Datepicker Component will be part of the Datepicker CDK. This will be the component that
- * developers will use and referencing when using the Datepicker Component. The Datepicker will have
- * the abstract CalendarView component as its child. This abstract CalendarView component will be
- * implemented by the Material Calendar component with its appropriate fields. Change detection will
- * also be implemented throughout the Datepicker and its extended views.
+ * Timepicker Component will be part of the Datetimepicker CDK. This will be the component that
+ * developers will use and referencing when using the Datetimepicker Component. The Timepicker will have
+ * the abstract TimeView component as its child. This abstract TimeView component will be
+ * implemented by the Material Time component with its appropriate fields. Change detection will
+ * also be implemented throughout the Datetimepicker and its extended views. The Timepicker Component would
+ * actually be the Datetimepicker Component in actual implementation.
  */
 @Component( {
     moduleId: module.id,
-    selector: 'datepicker',
+    selector: 'timepicker',
     template: `<ng-content></ng-content>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Datepicker {
-    @Input() date: Date;
-    @Input() minDate: Date | null;
-    @Input() maxDate: Date | null;
-    @ContentChild(CalendarView) view: CalendarView;
+export class Timepicker {
+    @Input() time: Date;
+    @Input() minTime: Date | null;
+    @Input() maxTime: Date | null;
+    @ContentChild(TimeView) view: TimeView;
 }
 
 /**
- * Datepicker Demo Component will show what the template of how to call the Datepicker may look
- * like for any particular user. For this example, I will specify all three inputs to the Calendar
- * component. In this example, all of the component views (month, year, and day) are included in the
- * calendar.
+ * Timepicker Demo Component will show what the template of how to call the Timepicker may look
+ * like for any particular user. For this example, I will specify all three inputs to the Time
+ * component. In this example, all of the component views (time) are included in the
+ * material time component.
  */
 @Component({
   moduleId: module.id,
-  selector: 'datepicker-demo',
-    template: `<datepicker><calendar [date]="date" [minDate]="minDate" [maxDate]="maxDate">
-        <month></month><year></year><day></day></calendar></datepicker>`,
+  selector: 'timepicker-demo',
+    template: `<timepicker><mat-time [time]="time" [minTime]="minTime" [maxTime]="maxTime">
+        <time></time></mat-time></timepicker>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatepickerDemo {
-    date = new Date();
-    minDate = new Date(2019, 3, 14);
-    maxDate = new Date(2020, 4, 13);
+export class TimepickerDemo {
+    time = new Date();
+    minTime = new Date(2019, 3, 14, 3,30,30);
+    maxTime = new Date(2020, 4, 13,4,30,30);
 }
 
 /**
- * Calendar Component that will be part of the Material Calendar example. This will be a UI
- * component that extends CalendarView and works together with the Datepicker CDK. This is where the
- * user specifies how the information is shown on the page. The extension of CalendarView here will
- * allow the Calendar Component to set the three variables as the user wishes and mark to see if any
- * of the values have changed as the user manipulates the calendar. The calendar will have
- * @ContentChildren with multiple CalendarViews for the multiple month, year, and day views.
+ * Material Time Component that will be part of the Material Time example. This will be a UI
+ * component that extends TimeView and works together with the Timepicker CDK. This is where the
+ * user specifies how the information is shown on the page. The extension of TimeView here will
+ * allow the Material Time Component to set the three variables as the user wishes and mark to see if any
+ * of the values have changed as the user manipulates the material time time. The material time component will have
+ * @ContentChild with multiple Tim for the multiple month, year, and day views.
  *
  * In the future, we can implement another input that will allow the users to choose different views
  * as they wish. For example, only month and day views.
  */
 @Component({
     moduleId: module.id,
-    selector: 'calendar',
-    template: `<div>start at: {{date}}</div>
-    <div>min date: {{minDate}}</div>
-    <div>max date: {{maxDate}}</div>
+    selector: 'time',
+    template: `<div>start at: {{time}}</div>
+    <div>min date: {{minTime}}</div>
+    <div>max date: {{maxTime}}</div>
     <ng-content></ng-content>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{provide: CalendarView, useExisting: Calendar}]
+    providers: [{provide: TimeView, useExisting: MatTime}]
 })
-export class Calendar extends CalendarView implements AfterContentInit {
-    @Input() date: Date;
-    @Input() minDate: Date | null;
-    @Input() maxDate: Date | null;
-  @ContentChildren(CalendarView) views: QueryList<CalendarView>;
+export class MatTime extends TimeView implements AfterContentInit {
+    @Input() time: Date;
+    @Input() minTime: Date | null;
+    @Input() maxTime: Date | null;
+  @ContentChildren(TimeView) views: QueryList<TimeView>;
 
   constructor(public zone: NgZone, public cdr: ChangeDetectorRef) {
       super();
@@ -117,7 +118,7 @@ export class Calendar extends CalendarView implements AfterContentInit {
    * the maximum date, and if it does, log it and in the future, throw an exception.
    */
   ngAfterContentInit() {
-      if (this.minDate != null && this.maxDate != null && this.minDate > this.maxDate) {
+      if (this.minTime != null && this.maxTime != null && this.minTime > this.maxDate) {
           console.log('Min date is greater than max date');
       } else {
           this.zone.onStable.pipe(take(1)).subscribe(() => {
@@ -220,130 +221,3 @@ export class MonthView extends CalendarView {
   }
 }
 
-/**
- * Year Component that will extend CalendarView and has all of the components and functionality
- * necessary to implement the YearView component in the Datepicker CDK. This includes going to the
- * next or previous years for the Datepicker date.
- */
-@Component({
-    moduleId: module.id,
-    selector: 'year',
-    template: `<div>year: {{date?.getFullYear()}}
-        <button (click)="nextYear()">next year</button>
-        <button (click)="prevYear()">prev year</button>
-    </div>`,
-    providers: [{provide: CalendarView, useExisting: YearView},
-        {provide: Calendar, useExisting: YearView}],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-
-})
-export class YearView extends CalendarView {
-  @Input() date: Date;
-  @Input() minDate: Date | null;
-  @Input() maxDate: Date | null;
-  newDate: Date;
-
-  /**
-   * Gets the next year from the current focus date, and changes the current focus date to
-   * that new date. If the maximum year has been hit, then log to console and in the future, throw
-   * an exception.
-   */
-  nextYear() {
-      this.newDate = new Date(this.date.getFullYear() + 1, this.date.getMonth(),
-          this.date.getDate(), this.date.getHours(), this.date.getMinutes(),
-          this.date.getSeconds());
-      if (this.maxDate == null) {
-          this.dateChanges.next(this.newDate);
-      } else {
-          if (this.maxDate.getTime() >= this.newDate.getTime()) {
-              this.dateChanges.next(this.newDate);
-          } else {
-              console.log('Maximum year possible has been reached');
-          }
-      }
-  }
-
-  /**
-   * Gets the previous year from the current focus date, and changes the current focus date to
-   * that new date. If the minimum year has been hit, then log to console and in the future, throw
-   * and exception.
-   */
-  prevYear() {
-      this.newDate = new Date(this.date.getFullYear() - 1, this.date.getMonth(),
-          this.date.getDate(), this.date.getHours(), this.date.getMinutes(),
-          this.date.getSeconds());
-      if (this.minDate == null) {
-          this.dateChanges.next(this.newDate);
-      } else {
-          if (this.minDate.getTime() <= this.newDate.getTime()) {
-              this.dateChanges.next(this.newDate);
-          } else {
-              console.log('Minimum year possible has been reached');
-          }
-      }
-  }
-}
-
-/**
- * Day Component that will extend CalendarView and has all of the components and functionality
- * necessary to implement the DayView component in the Datepicker CDK. This includes going to the
- * next or previous days for the Datepicker date.
- */
-@Component({
-    moduleId: module.id,
-    selector: 'day',
-    template: `<div>day: {{date?.getDay()}}
-        <button (click)="nextDay()">next day</button>
-        <button (click)="prevDay()">prev day</button>
-    </div>`,
-    providers: [{provide: CalendarView, useExisting: DayView},
-        {provide: Calendar, useExisting: DayView}],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-
-})
-export class DayView extends CalendarView {
-  @Input() date: Date;
-  @Input() minDate: Date | null;
-  @Input() maxDate: Date | null;
-  newDate: Date;
-
-  /**
-   * Gets the previous day from the current focus date, and changes the current focus date to
-   * that new date. If the maximum day has been reached, then log to console and in the future,
-   * throw an exception.
-   */
-  nextDay() {
-      this.newDate = new Date(this.date.getFullYear(), this.date.getMonth(),
-          this.date.getDate() + 1, this.date.getHours(), this.date.getMinutes(),
-          this.date.getSeconds());
-      if (this.maxDate == null) {
-          this.dateChanges.next(this.newDate);
-      } else {
-          if (this.maxDate.getTime() >= this.newDate.getTime()) {
-              this.dateChanges.next(this.newDate);
-          } else {
-              console.log('Maximum day possible has been reached');
-          }
-      }
-  }
-
-  /**
-   * Gets the previous day from the current focus date, and changes the current focus date to
-   * that new date. If the minimum day has been reached, then log to console and in the future,
-   * throw an exception.
-   */
-  prevDay() {
-      this.newDate = new Date(this.date.getFullYear(), this.date.getMonth(),
-          this.date.getDate() - 1, this.date.getHours(), this.date.getMinutes(),
-          this.date.getSeconds());
-      if (this.minDate == null) {
-          this.dateChanges.next(this.newDate);
-      } else {
-          if (this.minDate.getTime() <= this.newDate.getTime()) {
-              this.dateChanges.next(this.newDate);
-          } else {
-              console.log('Minimum day possible has been reached');
-          }
-      }
-  }
-}
